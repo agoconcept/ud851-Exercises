@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.asynctaskloader.utilities.NetworkUtils;
 
@@ -91,7 +92,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private void makeGithubSearchQuery() {
         String githubQuery = mSearchBoxEditText.getText().toString();
 
-        // TODO (17) If no search was entered, indicate that there isn't anything to search for and return
+        // DONE (17) If no search was entered, indicate that there isn't anything to search for and return
+        if ((githubQuery == null) || (githubQuery.length() == 0)) {
+            Toast.makeText(this, "No search was entered", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         URL githubSearchUrl = NetworkUtils.buildUrl(githubQuery);
         mUrlDisplayTextView.setText(githubSearchUrl.toString());
@@ -113,9 +118,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         // DONE (23) If the Loader was null, initialize it. Else, restart it.
         if (githubSearchLoader == null) {
-            loaderManager.initLoader(GITHUB_SEARCH_LOADER, queryBundle, this);
+            loaderManager.initLoader(GITHUB_SEARCH_LOADER, queryBundle, this).forceLoad();
         } else {
-            loaderManager.restartLoader(GITHUB_SEARCH_LOADER, queryBundle, this);
+            loaderManager.restartLoader(GITHUB_SEARCH_LOADER, queryBundle, this).forceLoad();
         }
     }
 
